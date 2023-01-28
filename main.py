@@ -23,11 +23,25 @@ class GameSprite(pygame.sprite.Sprite):
         self.image = pygame.image.load(file_path(image))
         self.image = pygame.transform.scale(self.image, (width, height))
         self.rect = self.image.get_rect()
-        self.recr.x = x
+        self.rect.x = x
         self.rect.y = y
         self.speed = speed
     def reset(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
+
+class Player(GameSprite):
+    def __init__(self, image, x, y, width, height, speed):
+        super().__init__(image, x, y, width, height, speed)
+
+    def update(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            self.rect.x -= self.speed
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            self.rect.x += self.speed
+    def fire(self):
+        pass
+player = Player("Harry_Potter.png", 300, 400, 70, 70, 5)
 
 pygame.mixer.music.load("shooter_music.ogg")
 pygame.mixer.music.set_volume(0.1)
@@ -43,6 +57,9 @@ while game == True:
 
     if play == True:
         window.blit(background, (0, 0))
+
+        player.reset()
+        player.update()
 
     clock.tick(FPS)
     pygame.display.update()
