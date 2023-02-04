@@ -1,5 +1,6 @@
 import pygame
 import os
+from random import randint
 pygame.init()
 
 def file_path(file_name):
@@ -41,7 +42,26 @@ class Player(GameSprite):
             self.rect.x += self.speed
     def fire(self):
         pass
-player = Player("Harry_Potter.png", 300, 400, 70, 70, 5)
+
+class Enemy(GameSprite):
+    def __init__(self, image, x, y, width, height, speed):
+        super().__init__(image, x, y, width, height, speed)
+
+    def update(self):
+        self.rect.y += self.speed
+        if self.rect.y >= WIN_HEIGHT:
+            self.rect.bottom = 0
+            self.rect.x = randint(0, WIN_WIDTH - self.rect.width)
+
+
+
+#*   картинка, х, у, ширина, висота, швидкість
+player = Player("garry_sh.png", 300, 400, 100, 70, 5)
+enemies = pygame.sprite.Group()
+
+for i in range(5):
+    enemy = Enemy(file_path("dementor23.png"), randint(0, WIN_WIDTH - 70), 0, 80, 85, 4)
+    enemies.add(enemy)
 
 pygame.mixer.music.load("shooter_music.ogg")
 pygame.mixer.music.set_volume(0.1)
@@ -60,6 +80,8 @@ while game == True:
 
         player.reset()
         player.update()
+        enemies.draw(window)
+        enemies.update()
 
     clock.tick(FPS)
     pygame.display.update()
